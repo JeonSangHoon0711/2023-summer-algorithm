@@ -1,0 +1,46 @@
+1. 첫 번째 줄에 정수 K 가 주어짐 이후 K개의 줄에 정수1개씩 주어짐 정수가 "0" 일 경우에는 가장 최근에 쓴 수를 지우고, 아닐 경우 해당 수를 쓴다.정수가 0일때 지울수있는 수가 있음을 보장
+2. 0일때는 스택에서 pop, 0이 아닐때는 스택에 push 를 하고 마지막에 스택에 있는 모든 정수의 합을 구하는 문제이다.
+3. 
+1) N ( K ) 를 입력받음
+2) N번 반복하는 for문생성
+3) 한줄씩 숫자를 입력받으며 0인지 확인
+4) 0일시 stack.pop() 실행
+5) 0이 아닐시 stack.push(num) 실행
+6) for문 종료후 stack의 정수를 sum에 다 더함
+7) sum 출력
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+public class Main {
+  public static void main(String[] args) throws IOException  {
+
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+    Stack<Integer> stack = new Stack<Integer>();
+
+    int N = Integer.parseInt(br.readLine());
+    int sum = 0;
+
+    for(int i = 0; i < N; i++){
+      int num = Integer.parseInt(br.readLine());
+      if(num == 0){
+        stack.pop();
+      }
+      else{
+        stack.push(num);
+      }
+    }
+    for(int i : stack){
+      sum += i;
+    }
+    System.out.println(sum);
+
+      
+  }
+  
+
+}
