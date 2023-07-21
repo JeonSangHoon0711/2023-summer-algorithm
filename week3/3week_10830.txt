@@ -1,0 +1,72 @@
+1) 크기가 N*N 인 행렬 A를 제곱하는 문제이다
+2) 행렬의 제곱을할때 행렬의 지수를 절반으로 잘라가며 분할 정복 하면 된다.
+행렬곱을 해주는 함수와 분할을 해주는 함수가 필요하다
+
+3. 
+1) n과 k를 입력받는다
+2) 행렬을 입력받아 넣는다 입력받은후 전역변수로 선언한 행렬 baseMatrix에 넣는다
+3) 행렬곱을 해주는 함수 matrixMult 를 생성한다
+3) 분할을 해주는 함수 matrixPow를 생성한다 여기에는 분할 후 홀수 짝수에 따라 리턴을 다르게 한다
+4) matrixPow를 리턴받은 행렬 answer 을 Stringbuilder 로 만들어 출력한다.
+
+
+4.
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+    private static final int MOD = 1000;
+    public static int[][] baseMatrix;
+    public static int n;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        long k = Long.parseLong(st.nextToken());
+        int[][] matrix = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = Integer.parseInt(st.nextToken());
+                matrix[i][j] %= MOD;
+            }
+        }
+
+        baseMatrix = matrix;
+        
+        int[][] answer = matrixPow(k);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                sb.append(answer[i][j]).append(' ');
+            }
+            sb.append('\n');
+        }
+        System.out.print(sb);
+    }
+    
+    public static int[][] matrixMult(int[][] a, int[][] b) {
+        int[][] arr = new int[n][n];
+        for (int i = 0; i < n; i++) {   // row of a
+            for (int j = 0; j < n; j++) {   // column of b
+                for (int x = 0; x < n; x++) {
+                    arr[i][j] += a[i][x]*b[x][j];
+                }
+                arr[i][j] %= MOD;
+            }
+        }
+        return arr;
+    }
+
+    public static int[][] matrixPow(long b) {
+        if (b == 1) {
+            return baseMatrix;
+        }
+        int[][] tmp = matrixPow(b/2);
+        int[][] tmpPow2 = matrixMult(tmp, tmp);
+        return b%2 == 0 ? tmpPow2 : matrixMult(tmpPow2, matrixPow(1));
+    }
+
+}

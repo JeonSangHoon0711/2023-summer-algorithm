@@ -1,0 +1,45 @@
+1. 입력받은 수를 B번 제곱후 C로 나누는 문제
+2. 숫자 3개 입력받을수 분할정복을 이용하여 구하는 문제다
+지수가 홀수면 num^/2 * num^/2* num 을하고 짝수면 num^/2 * num^/2 하는문제다
+4.
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
+ 
+public class Main {
+ 
+    
+    public static void main(String[] args) throws IOException {
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        long C;
+		
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		
+		long A = Long.parseLong(st.nextToken());
+		long B = Long.parseLong(st.nextToken());
+		C = Long.parseLong(st.nextToken());
+		
+		System.out.println(pow(A, B, C));
+	}
+	
+
+	public static long pow(long A, long exponent, long C) {
+		
+
+		if(exponent == 1) {
+			return A % C;
+		}
+		
+		long temp = pow(A, exponent / 2, C);
+		
+
+		if(exponent % 2 == 1) {
+			return (temp * temp % C) * A % C;
+		}
+		return temp * temp % C;
+		
+	}
+	
+}

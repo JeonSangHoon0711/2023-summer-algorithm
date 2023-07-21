@@ -1,0 +1,60 @@
+1. 주어진 숫자가 하나이상의 연속 된 소수의 합으로 나타낼수 있는지 그렇다면 몇개의 방식으로 나타낼수 있는지 구하는 문제이다.
+2. 에레토스테네스의 체로 소수를 구한다음 투포인터 알고리즘을 사용해 구간합을 구하면 될것이다.
+N까지 모든 소수를 저장하고
+포인터 2개 포인터1 포인터2 를 사용하여 위치를 0으로 초기화시킨다
+sum이 N과 같다면 ans를 1 증가시키고 N보다 작다면 포인터1을 +1 해주고 sum계산을 다시한다
+N보다 크다면 포인터2를 +1 해주고 sum에서 값을 빼준다
+point1이 point2 보다 더 앞에있다.
+
+3.
+1) 에레토스테네스의 체를 이용하여 prime_numbers 리스트에 i*i<=N 인 소수 들을 넣는다
+2) point1,point2,sum,count 변수 선언 모두 0으로 초기화
+3) sum >= N 일때 sum이 N 보다 더 큰 것이므로 point2의 현재값을 sum에서 빼고 한칸 이동시킨다
+sum < N 일때 point1의 현재값을 sum에 넣고 point1를 한칸 이동시킨다
+point1 == prime_numbers 일때 종료한다
+N==sum 이면 count++ 한다
+4) count 출력한다
+
+
+4.
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+public class Main {
+
+    
+    public static void main(String[] args) throws IOException {
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        ArrayList<Integer> prime_numbers = new ArrayList<>();
+        boolean prime[];
+        
+   		// 1. 소수 구하기
+        prime = new boolean[N+1];        
+        prime[0] = prime[1] = true;       
+        for(int i=2; i*i<=N; i++){
+            if(!prime[i]) for(int j=i*i; j<=N; j+=i) prime[j]=true;                
+        }            
+        for(int i=1; i<=N;i++){
+        	if(!prime[i]) prime_numbers.add(i);     
+        }
+        
+        // 2. 연속합으로 주어진 정수 구할 수 있는지 판별
+        int point1=0, point2=0, sum=0, count=0;
+        while(true) {
+        	if(sum >= N )
+                sum -= prime_numbers.get(point2++);
+        	else if(point1 == prime_numbers.size()) 
+                break;
+        	else {
+                sum += prime_numbers.get(point1++);       	
+            }
+        	if(N==sum)
+                count++;        	
+        }		
+        System.out.println(count);	
+    }	
+}

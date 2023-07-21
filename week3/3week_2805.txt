@@ -1,0 +1,69 @@
+1. 주어진 나무 막대를 잘라 총합이 N이 되도록 하는 문제이다
+2. 자르는 높이의 최대값을 구하는 문제이다
+나무의 높이가 20, 15, 10, 17이라고 하자.
+높이를 15로 지정했다면, 나무를 자른 뒤의 높이는 15, 15, 10, 15가 될 것이고, 길이가 5인 나무와 2인 나무가나온다. (총 7미터가 나온다) 절단기에 설정할 수 있는 높이는 양의 정수 또는 0이다.
+이분탐색을 이용하여 최대값을 찾는다
+자른것의 총합에따라 포인터 위치를 수정하며 찾는다.
+
+3.
+1) 나무갯수 N 과 가져가는나무의길이 M 을입력받는다
+2) 나무의길이들을 입력받으며 max값을 갱신해준다
+3) min과 max를 사용 mid는 (min+max)/2 로 한다.
+4) 만약 자르는길이가 100이고 막대가 10 이면 음수값을 더할 수 없으니 양수만 더하도록 하는 foreach문을 만든다
+5) 최대값(상한)을 줄여야 하기때문에 sum < M 일경우 max = mid 로 줄인다
+6) sum >=M 일경우 자르는 높이를 높여야 한다 min = mid+1 로 한다.
+7) while 문 끝난후 min-1을 출력한다.
+
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.StringTokenizer;
+ 
+public class Main {
+	public static void main(String[] args) throws IOException {
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		
+		int[] tree = new int[N];
+		
+		int min = 0;
+		int max = 0;
+		
+		st = new StringTokenizer(br.readLine(), " ");
+		for(int i = 0; i < N; i++) {
+			tree[i] = Integer.parseInt(st.nextToken());
+			if(max < tree[i]) {
+				max = tree[i];
+			}
+		}
+
+		while(min < max) {
+			
+			int mid = (min + max) / 2;
+			long sum = 0;
+			for(int treeHeight : tree) {
+
+				if(treeHeight - mid > 0) { 
+					sum += (treeHeight - mid);
+				}
+			}
+
+			if(sum < M) {
+				max = mid;
+			}
+
+			else {
+				min = mid + 1;
+			}
+		}
+		
+		System.out.println(min - 1);
+		
+	}
+}
