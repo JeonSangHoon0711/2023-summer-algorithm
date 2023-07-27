@@ -1,0 +1,103 @@
+1. 트리가 주어졌을때 두노드가 주어지고 그들의 공통 조상을 찾는 문제이다
+2.
+이문제는 LCA 문제이다
+두 정점의 높이를 같게하고 거기서부터 하나씩 올려가면서 같은정점나올때까지 반복한다
+노드 연결 데이터를 입력받아 저장한다
+저장된 노드 데이터를 root노드부터 dfs 탐색하여 높이값과 부모값 저장
+공통 조상을 구해준다
+
+
+3.
+1) 트리가 몇개 들어올지 모르니 for문을 돌리며 출력한다
+2) n을 입력받고 list배열을 만들어준다
+3) rootcheck불리언배열을만들어 true로 채워준다
+4) for문을 돌리며 list[a].add(b) 를 해준다
+5) rootcheck[b] = false 로 해준다
+6) init 함수를 돌리며 높이와 부모 배열을 만든다
+7) LCA ㅎ마수를 돌린다
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class Main{
+
+	static List<Integer>[] list;
+	static int[] parent, depth;
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int tc = Integer.parseInt(br.readLine());
+		for(int t=0; t<tc; t++) {
+			int n = Integer.parseInt(br.readLine());
+			
+			parent = new int[n+1];
+			depth = new int[n+1];
+			list = new ArrayList[n+1];
+			for(int i=1; i<n+1; i++) {
+				list[i] = new ArrayList<>();
+			}
+			
+			boolean[] rootCheck = new boolean[n+1];
+			Arrays.fill(rootCheck, true);
+			StringTokenizer st;
+			for(int i=0; i<n-1; i++) {
+				st = new StringTokenizer(br.readLine());
+				int a = Integer.parseInt(st.nextToken());
+				int b = Integer.parseInt(st.nextToken());
+				list[a].add(b);
+				rootCheck[b] = false;
+			}
+			int rootIdx=0;
+			for(int i=1; i<n+1; i++) {
+				if(rootCheck[i]) {
+					rootIdx =i; 
+					break;
+				}
+			}
+			
+			init(rootIdx,1,0);
+			
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			System.out.println(LCA(a,b));
+		}
+		
+	}
+
+	static void init(int cur, int h, int pa) {
+		depth[cur] = h;
+		parent[cur] = pa;
+		for(int nxt : list[cur]) {
+			if(nxt != pa) {
+				init(nxt, h+1, cur);
+			}
+		}
+	}
+	
+	static int LCA(int a, int b) {
+		int ah = depth[a];
+		int bh = depth[b];
+		while(ah > bh) {
+			a = parent[a];
+			ah--;
+		}
+		
+		while(bh > ah) {
+			b = parent[b];
+			bh--;
+		}
+		
+		while(a!=b) {
+			a = parent[a];
+			b = parent[b];
+		}
+		
+		return a;
+	}
+}

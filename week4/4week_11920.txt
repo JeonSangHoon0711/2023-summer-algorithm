@@ -1,0 +1,61 @@
+1. 버블정렬이 N 번 진행되었을때 의 결과를 출력하는 문제이다
+2.
+첫 번째 줄에는 N과 K가 주어진다.
+두 번째 줄에는 처음 수열의 상태가 주어진다. 즉, 처음 수열을 이루는 N개의 정수가 공백을 사이로 두고 차례대로 주어진다.
+
+1 ≤ N ≤ 100,000
+1 ≤ K ≤ N
+수열의 각 항은 1 이상 1,000,000,000 이하의 정수이다.
+
+기존의 버블정렬로 한다면 시간초과가 난다 ( 시간복잡도 O(n^2) )
+
+이문제는 우선순위큐를 이용한다
+
+
+3.
+1) N 과 K 를 입력받는다
+2) v[i] 배열에 값을 넣어준다
+3) 우선순위큐 maxheap을 만든다
+4) maxheap에 k만큼의 수를 v[i] 배열에서 가져와 넣는다
+5) i = k ~ i < n 까지 포문 새엇ㅇ한다
+5) maxheap의 peek 가 v[i] 보다 작다면 maxheap의 peek 를 출력하고 제거하고 v[i]값을 maxheap 에 넣는다
+6) 그렇지 않다면 v[i]를 출력한다
+7) 포문이끝난후 나머지 남은 값들인 maxheap에 값을 출력한다
+
+
+import java.util.PriorityQueue;
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		int N = 0;
+		int k = 0;
+		Scanner scan = new Scanner(System.in);
+		N = scan.nextInt();
+		k = scan.nextInt();
+		int v[] = new int[N];
+		for(int i = 0; i < N; i++) {
+			v[i] = scan.nextInt();
+		}
+		scan.close();
+		
+	    PriorityQueue<Integer>    maxheap=new PriorityQueue<Integer>();
+	    for(int i = 0; i < k; i++) {
+	    	maxheap.add(v[i]);
+	    }
+	    
+	    for(int i = k; i < N; i++) {
+	    	if(maxheap.peek() < v[i]) {
+		    		System.out.print(maxheap.remove()+" ");
+		    		maxheap.add(v[i]);
+	    	}
+	    	else {
+	    		System.out.print(v[i]+" ");
+	    	}
+	    }
+	    for(int i = 0; i < k; i++) {
+	    	System.out.print(maxheap.remove()+" ");
+	    	
+	    }
+	}
+}

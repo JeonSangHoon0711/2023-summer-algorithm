@@ -1,0 +1,72 @@
+1. 트리를 전위순회한 입력으로 주어진 이진검색트리를 후위 순회 한 결과를 출력하는 문제이다
+2.
+전위 순회 : 0->1->3->7->8->4->9->10->2->5->11->6 라면
+후위 순회 : 7->8->3->9->10->4->1->11->5->6->2->0 로 볼 수 있다
+전위순회는 처음 탐색한 값이 root 이기에 처음값을 root로 설정한다
+이후 값이 작으면 왼쪽 크면 오늘쪽 자식으로 넘어가 null일경우 해당노드 생성해주고 아니면 다시 재귀로 탐색한다
+트리를 다 만든 후 후위 순회함수를 구현해 출력한다
+
+
+3.
+1) node 클래스를 만든다
+2) 처음값을 root로 설정한다
+3) while문을 돌리며 input을 받고 insert 함수를 통해 트리에 넣어준다
+4) postorder 함수를 통해 출력한다
+
+4.
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main {
+    static class Node {
+        int num;
+        Node left, right;
+
+        Node(int num) {
+            this.num = num;
+        }
+
+        Node(int num, Node left, Node right) {
+            this.num = num;
+            this.left = left;
+            this.right = right;
+        }
+
+        void insert(int n) {
+            if (n < this.num) {
+                if (this.left == null)
+                    this.left = new Node(n);
+                else this.left.insert(n);
+            } else {
+                if (this.right == null)
+                    this.right = new Node(n);
+                else this.right.insert(n);
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        Node root = new Node(Integer.parseInt(br.readLine()));
+        String input;
+        while (true) {
+            input = br.readLine();
+            if (input == null || input.equals(""))
+                break;
+            root.insert(Integer.parseInt(input));
+        }
+
+        postOrder(root);
+    }
+
+    static void postOrder(Node node) {
+        if (node == null)
+            return;
+
+        postOrder(node.left);
+        postOrder(node.right);
+        System.out.println(node.num);
+    }
+}
