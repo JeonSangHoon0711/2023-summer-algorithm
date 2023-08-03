@@ -1,0 +1,84 @@
+1. 이문제는 최소 스패닝 트리를 구하는 문제다
+2. 최소 스패닝 트리는 크루스칼 또는 프림 알고리즘을 통해 구할 수 있다
+크루스칼로 구현 해보겠다.
+크루스칼은 가중치가 가장 낮은 간선을 선택하면서 진행되는데 이 과정에서
+사이클이 일어나면 안되고, 서로 모두 연결 되어있어야 한다 이를 find 와 union 함수를 통해 해결한다.
+3
+1) 입력들을 받아준다
+2) for문을 v만큼 돌려 parent 배열에 [i] = i 로 넣어둔다
+3) 큐를 하나 만들어준다 자료형은 Edge로 v1,v2,weight 변수를 가지고 있다.
+4) for문들 돌리며 큐에 값을 넣는다.
+5) weight = 0 으로 정하고 큐에서 poll 하며 while 문을 돌린다
+6) 가장 작은 값을 가져온다 ( 정렬은 compareTo 에서 weight 로 되게 해둠 ) 
+7) 두 간선의 정점의 부모가 다르다면 간선을 최소 스패닝 트리에 추가
+8) union을 통해 간선 연결하고 weight += 해줌
+9) weight 출력
+
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+public class Main {
+    
+    static int parent[];
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer stz = new StringTokenizer(br.readLine());
+        int v = Integer.parseInt(stz.nextToken());
+        int e = Integer.parseInt(stz.nextToken());
+        parent = new int[v+1];
+        for(int i = 1; i <= v; i++)
+            parent[i]= i;
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        for(int i = 0; i < e; i++) {
+            stz = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(stz.nextToken());
+            int b = Integer.parseInt(stz.nextToken());
+            int w = Integer.parseInt(stz.nextToken());
+            pq.offer(new Edge(a, b, w));
+        }
+        
+        int weight = 0;
+        while(!pq.isEmpty()) {
+            Edge now = pq.poll();
+            if(find(now.v1) != find(now.v2)) {
+                union(now.v1, now.v2);
+                weight += now.weight;
+            }
+        }
+        
+        System.out.println(weight);
+    }
+    
+    public static void union(int n1, int n2) {
+        int p1 = find(n1);
+        int p2 = find(n2);
+        
+        if(p1 < p2)
+            parent[p2] = p1;
+        else
+            parent[p1] = p2;
+    }
+    
+    public static int find(int n) {
+        if(parent[n] == n)
+            return n;
+        return parent[n] = find(parent[n]);
+    }
+    
+    static class Edge implements Comparable<Edge>{
+        int v1, v2, weight;
+        
+        Edge(int v1, int v2, int weight) {
+            this.v1 = v1;
+            this.v2 = v2;
+            this.weight = weight;
+        }
+        
+        public int compareTo(Edge e) {
+            return weight - e.weight;
+        }
+    }
+}

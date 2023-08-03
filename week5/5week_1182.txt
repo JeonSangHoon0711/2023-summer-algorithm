@@ -1,0 +1,56 @@
+1. N개의 정수로 이루어진 부분수열중 그 합이 S 가되는 경우의 수를 찾는것
+2. 부분수열의 경우의 수를 보면 트리형태로 나타낼 수 있다
+1-1(o)-2(o)
+|     L   -2(x)
+| -1(x)
+,, 쭉 트리형태로 나온다
+해서 트리의 모든 노드를 탐색하는 방법인 DFS 깊이우선탐색을 이용할것이다.
+
+
+3.
+1) 정수의 개수 N 과 S가 주어진다(s는 수열의합조건)
+2) arr배열을 만들고 거기에 수열들을 입력받는다
+3) dfs 알고리즘을 실행한다
+4) 첫번째 호출은 현재 인덱스를 포함하는경우, 두번째 호출은 현재인덱스를 포함하지 않는 경우로 해서 모든 부분수열을 탐색해 나감
+5) ans 값 출력하는데 처음에 0으로 설정했어서 S가 0일때 -1 해서 출력한다
+
+4.
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+    static int N, S, ans;
+    static int[] arr;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        S = Integer.parseInt(st.nextToken());
+
+        arr = new int[N];
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
+
+        ans = 0;
+        dfs(0, 0);
+        System.out.println(S == 0 ? ans - 1 : ans);
+
+    }
+
+    static void dfs(int idx, int sum) {
+        if (idx == N) {
+            if (sum == S && idx > 0) {
+                ans += 1;
+            }
+            return;
+        }
+
+        dfs(idx + 1, sum + arr[idx]);
+        dfs(idx + 1, sum);
+    }
+}
