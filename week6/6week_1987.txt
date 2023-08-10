@@ -1,0 +1,69 @@
+1. 세로R칸 가로C칸으로된 표 모양의 보드에 알파벳이 적혀있다 말이 상화좌우로 인접한 네칸중 한칸으로 이동할수있는데 좌측상단에서 시작해서 최대 몇칸 지날 숭 ㅣㅆ는지 구하는 프로그램 작성
+2. 미로찾기와 비슷한 문제이므로 dfs를 사용한다
+3.
+1) 상하좌우 배열 dx,dy 를만든다
+2) R과C를 입력받고 map 배열크기를 [R][C] 로초기화한다
+3) map 배열에 값을 입력받는다
+4) (0,0) 배열을 dfs 검사한다
+5) visit 배열에 방문했는지 검사를 하여 중복되었으면 이동거리 갱신하고 리턴한다.
+6) ans 값을 출력한다
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	static int R, C;
+	static int[][] map;
+	static boolean[] visit = new boolean[26];
+	static int[] dx = { -1, 1, 0, 0 };
+	static int[] dy = { 0, 0, -1, 1 };
+	static int ans = 0;
+
+
+
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		R = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		map = new int[R][C];
+		for (int i = 0; i < R; i++) {
+			String str = br.readLine();
+			for (int j = 0; j < C; j++) {
+				map[i][j] = str.charAt(j) - 'A';
+			}
+		}
+
+		dfs(0, 0, 0);
+		
+
+		System.out.println(ans);
+	}
+}
+	public static void dfs(int x, int y, int count) {
+		if (visit[map[x][y]]) { 
+			ans = Math.max(ans, count); 
+			return; 
+		} else {
+			visit[map[x][y]] = true;
+			for (int i = 0; i < 4; i++) {
+				int cx = x + dx[i];
+				int cy = y + dy[i];
+
+				if (cx >= 0 && cy >= 0 && cx < R && cy < C) {
+					dfs(cx, cy, count + 1);
+				}
+
+			}
+
+			visit[map[x][y]] = false;
+
+		}
+	}
+	}
+}

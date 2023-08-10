@@ -1,0 +1,83 @@
+1. 트리가 주어질때 지름을 구하는 문제이다.
+2. dfs를 한번돌려 임의의 정점에서 가장 먼 정점을 선택후 
+선택한 정점으로부터 한번더 dfs 를 돌려 먼 정점까지의 거리를 구할 수 있다.
+3.
+1) n을 입력받는다
+2) n번만큼 list에 add(new ArrayList<>()); 해준다
+3) for문을 돌리며 list에 트리 정보를 넣어준다
+4) dfs를 한번 돌려 임의의 정점 max_idx를 찾는다
+5) max_idx로 dfs 를 한번 더 돌려 지름을 max 에 저장한다
+6) 출력한다.
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+public class Main {
+    static ArrayList<ArrayList<Node>> list;
+    static int n;
+    static int max = 0;
+    static boolean visited[];
+    static int max_idx = 0;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        n = Integer.parseInt(br.readLine());
+
+        list = new ArrayList<ArrayList<Node>>();
+        
+        for (int i = 0; i <= n; i++) {
+            list.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int parent = Integer.parseInt(st.nextToken());
+
+            while (st.hasMoreTokens()) {
+                int child = Integer.parseInt(st.nextToken());
+                if(child == -1) break;
+                int weight = Integer.parseInt(st.nextToken());
+                
+                list.get(parent).add(new Node(child, weight));
+            }
+        }
+        
+        visited = new boolean[n + 1];
+        visited[1] = true;
+        dfs(1, 0);
+
+        visited = new boolean[n + 1];
+        visited[max_idx] = true;
+        dfs(max_idx, 0);
+        System.out.println(max);
+    }
+
+    public static void dfs(int idx, int cnt) {
+
+        if (max < cnt) {
+            max = cnt;
+            max_idx = idx;
+        }
+
+        for (Node a : list.get(idx)) {
+            if (!visited[a.idx]) {
+                visited[a.idx] = true;
+                dfs(a.idx, cnt + a.cnt);
+            }
+        }
+    }
+
+    static class Node {
+        int idx, cnt;
+
+        Node(int idx, int cnt) {
+            this.idx = idx;
+            this.cnt = cnt;
+        }
+    }
+}
