@@ -1,0 +1,87 @@
+1. 컴퓨터와 컴퓨터를 모두 연결하는 네트워크를 구축하려는데 최소비용을 구하는 문제이다.
+2. 그래프의 최소신장트리의 가중치를 구하는 문제이다.
+3.
+1) N과M을 입력받는다
+2) 인접리스트(이차원연결리스트) list를 만든다
+3) boolean 배열 visited 를만든다
+4) list에 n+1만큼 LinkedList를 넣어준다
+5) a,b,weight 값을 받아 list에 넣어준다
+6) 우선순위큐를 만든다
+7) 1번노드와 간선을 큐에 넣는다
+8) 방문노드를 true로 설정한다
+9) while문 큐가 빌때까지
+10) 큐에서 노드하나꺼낸다
+11) 방문한노드면 무시하고 다음노드
+12) 방문하지 않은 노드면 방문배열 true 로설정하고 sum 값에 노드 가중치 더한다
+13) 꺼낸노드와 인접한노드중 방문하지않은 노드 큐에 추가
+13) sum 출력
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+
+public class Main {
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine());
+        int M = Integer.parseInt(br.readLine());
+
+        List<List<Node>> list = new LinkedList<>();
+        boolean[] visited = new boolean[N+1];
+
+        for(int i = 0; i<N+1; i++)
+            list.add(new LinkedList<>());
+
+        for(int i = 0; i<M; i++){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int A = Integer.parseInt(st.nextToken());
+            int B = Integer.parseInt(st.nextToken());
+            int val = Integer.parseInt(st.nextToken());
+
+            list.get(A).add(new Node(B, val));
+            list.get(B).add(new Node(A, val));
+        }
+
+        PriorityQueue<Node> que = new PriorityQueue<>(new Comparator<Node>() {
+            @Override
+            public int compare(Node o1, Node o2) {
+                return o1.weight - o2.weight;
+            }
+        });
+        for(int i = 0; i<list.get(1).size(); i++)
+            que.offer(list.get(1).get(i));
+        visited[1] = true;
+        int sum = 0;
+
+        while(!que.isEmpty()){
+            Node node = que.poll();
+
+            if(visited[node.n])
+                continue;
+
+            visited[node.n] = true;
+            sum += node.weight;
+            for(int i = 0; i<list.get(node.n).size(); i++)
+                que.offer(list.get(node.n).get(i));
+        }
+
+        System.out.println(sum);
+    }
+}
+class Node
+{
+    int n,weight;
+
+    public Node(int n, int weight)
+    {
+        this.n = n;
+        this.weight = weight;
+    }
+}

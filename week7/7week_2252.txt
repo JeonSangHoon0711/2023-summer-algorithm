@@ -1,0 +1,70 @@
+1. 일부 두학생의 키를 비교해서 줄을 세웠을때 나오는 결과를 출력하는 프로그램이다
+2. 입력받은 순서가 상관이 있기에 위상정렬 알고리즘을 사용한다.
+학생번호 A, B 가 주어진다면 A가 B 앞에 서야한다는 의미다.
+
+3.
+1) N 과 M 의 변수를 입력받는다
+2) 인접 리스트(adjList) 및 진입 차수 배열(inDegree)을 초기화한다
+3) for문에서 M 줄 입력을 처리하며, 인접 리스트 및 진입 차수 배열에 키 비교 정보를 저장한다
+4) 진입 차수가 0인 학생들을 가지고 큐에 값을 넣는다.
+5) StringBuilder를 생성하여 결과 출력을 위한 문자열을 만듭니다.
+6) while문 큐가 빌 때까지  반복
+7) 큐에서 원소를 하나 꺼내어(current) 결과 문자열에 추가합니다.
+8) 꺼낸 원소의 인접한 노드(next)들에 대해 진입 차수를 감소시킵니다.
+9) 감소된 진입 차수가 0이면 해당 노드를 큐에 추가합니다.
+10) 최종적으로 결과 문자열을 출력합니다
+
+
+4.
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] input = br.readLine().split(" ");
+        int n = Integer.parseInt(input[0]);
+        int m = Integer.parseInt(input[1]);
+
+        ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
+        int[] inDegree = new int[n+1];
+
+        for (int i = 0; i <= n; i++) {
+            adjList.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < m; i++) {
+            input = br.readLine().split(" ");
+            int a = Integer.parseInt(input[0]);
+            int b = Integer.parseInt(input[1]);
+            adjList.get(a).add(b);
+            inDegree[b]++;
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 1; i <= n; i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            sb.append(current).append(" ");
+            
+            for (int next : adjList.get(current)) {
+                inDegree[next]--;
+                if (inDegree[next] == 0) {
+                    queue.add(next);
+                }
+            }
+        }
+
+        System.out.println(sb.toString().trim());
+    }
+}
